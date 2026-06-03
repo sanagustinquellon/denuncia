@@ -536,7 +536,10 @@ function renderDetalleCasoAdmin() {
         <span class="detail-code">${caso.codigo}</span>
         <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">Recibido el ${caso.fecha}</div>
       </div>
-      <div style="display:flex; gap:8px;">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-secondary no-print" style="padding: 6px 12px; font-size: 0.85rem;" onclick="window.print()">
+          🖨️ Imprimir Informe
+        </button>
         <span class="badge ${statusBadgeClass}">${caso.estado}</span>
         <span class="badge ${riskBadgeClass}">Riesgo ${caso.riesgo.split(" / ")[0]}</span>
       </div>
