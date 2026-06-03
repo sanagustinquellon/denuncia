@@ -1,853 +1,444 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Canal Confidencial de Denuncia — C.E. San Agustín</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --verde: #14335f;
-    --verde-claro: #1e4a85;
-    --verde-suave: #eaf0f8;
-    --dorado: #c9a84c;
-    --dorado-claro: #f0d989;
-    --texto: #1a1f1c;
-    --texto-suave: #4a5a50;
-    --borde: #c2d0e8;
-    --fondo: #f5f7fb;
-    --blanco: #ffffff;
-    --rojo: #c0392b;
-    --sombra: 0 4px 24px rgba(26,92,56,0.10);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--fondo);
-    color: var(--texto);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* HEADER */
-  .header {
-    width: 100%;
-    background: var(--verde);
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    right: -60px; top: -60px;
-    width: 320px; height: 320px;
-    border-radius: 50%;
-    background: rgba(201,168,76,0.12);
-    pointer-events: none;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    left: -40px; bottom: -80px;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    pointer-events: none;
-  }
-  .header-inner {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 36px 28px 28px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(22px, 4vw, 30px);
-    color: var(--blanco);
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .header .subtitulo {
-    color: var(--dorado-claro);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .badge-confidencial {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 12px;
-    color: var(--blanco);
-    margin-top: 14px;
-    font-weight: 500;
-  }
-  .badge-confidencial::before { content: '🔒'; font-size: 13px; }
-
-  /* AVISO LEGAL */
-  .aviso {
-    max-width: 720px;
-    width: 100%;
-    margin: 24px auto 0;
-    padding: 0 20px;
-  }
-  .aviso-box {
-    background: #fff8e6;
-    border: 1px solid var(--dorado);
-    border-left: 4px solid var(--dorado);
-    border-radius: 8px;
-    padding: 14px 18px;
-    font-size: 13px;
-    color: #5a4010;
-    line-height: 1.6;
-  }
-  .aviso-box strong { color: #3a2808; }
-
-  /* FORM CONTAINER */
-  .form-wrap {
-    max-width: 720px;
-    width: 100%;
-    margin: 24px auto 48px;
-    padding: 0 20px;
-  }
-
-  .section-card {
-    background: var(--blanco);
-    border-radius: 12px;
-    border: 1px solid var(--borde);
-    box-shadow: var(--sombra);
-    margin-bottom: 20px;
-    overflow: hidden;
-    animation: fadeUp 0.4s ease both;
-  }
-  .section-card:nth-child(2) { animation-delay: 0.07s; }
-  .section-card:nth-child(3) { animation-delay: 0.14s; }
-  .section-card:nth-child(4) { animation-delay: 0.21s; }
-  .section-card:nth-child(5) { animation-delay: 0.28s; }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .section-header {
-    background: var(--verde-suave);
-    border-bottom: 1px solid var(--borde);
-    padding: 14px 22px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-num {
-    width: 26px; height: 26px;
-    background: var(--verde);
-    color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  .section-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--verde);
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-  }
-
-  .section-body { padding: 22px; }
-
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .field-row.full { grid-template-columns: 1fr; }
-  @media (max-width: 520px) {
-    .field-row { grid-template-columns: 1fr; }
-  }
-
-  .field { display: flex; flex-direction: column; gap: 5px; }
-
-  label {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--texto-suave);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  label .req { color: var(--rojo); margin-left: 2px; }
-  label .opc { color: #aaa; font-weight: 400; text-transform: none; font-size: 11px; margin-left: 4px; }
-
-  input[type="text"],
-  input[type="date"],
-  select,
-  textarea {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14.5px;
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    padding: 10px 13px;
-    color: var(--texto);
-    background: var(--fondo);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-    width: 100%;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--verde-claro);
-    box-shadow: 0 0 0 3px rgba(45,138,88,0.12);
-    background: var(--blanco);
-  }
-  textarea { resize: vertical; min-height: 90px; }
-
-  /* Checkboxes de tipo acoso */
-  .check-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  @media (max-width: 480px) { .check-grid { grid-template-columns: 1fr; } }
-
-  .check-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-    cursor: pointer;
-    background: var(--fondo);
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    padding: 10px 12px;
-    transition: border-color 0.2s, background 0.2s;
-    font-size: 13.5px;
-    color: var(--texto);
-    line-height: 1.4;
-  }
-  .check-item:hover { border-color: var(--verde-claro); background: var(--verde-suave); }
-  .check-item input[type="checkbox"] {
-    width: 16px; height: 16px;
-    margin-top: 1px;
-    accent-color: var(--verde);
-    flex-shrink: 0;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-    background: none;
-  }
-  .check-item.checked {
-    border-color: var(--verde);
-    background: var(--verde-suave);
-  }
-
-  /* Radio buttons anonimato */
-  .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
-  .radio-item {
-    display: flex; align-items: center; gap: 8px;
-    cursor: pointer;
-    background: var(--fondo);
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 13.5px;
-    transition: all 0.2s;
-    flex: 1; min-width: 140px;
-  }
-  .radio-item:hover { border-color: var(--verde-claro); background: var(--verde-suave); }
-  .radio-item input[type="radio"] {
-    accent-color: var(--verde);
-    width: 16px; height: 16px;
-    cursor: pointer;
-    border: none; padding: 0; background: none;
-  }
-  .radio-item.selected { border-color: var(--verde); background: var(--verde-suave); }
-
-  /* Campos opcionales denunciante */
-  #bloque-identidad {
-    overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.3s;
-    max-height: 0;
-    opacity: 0;
-  }
-  #bloque-identidad.visible {
-    max-height: 300px;
-    opacity: 1;
-  }
-
-  /* Nota anonimato */
-  .nota-anonimo {
-    font-size: 12.5px;
-    color: var(--texto-suave);
-    background: var(--verde-suave);
-    border-radius: 7px;
-    padding: 10px 14px;
-    margin-top: 12px;
-    line-height: 1.5;
-    border-left: 3px solid var(--verde);
-  }
-
-  /* BOTÓN ENVIAR */
-  .btn-enviar {
-    width: 100%;
-    background: var(--verde);
-    color: var(--blanco);
-    border: none;
-    border-radius: 10px;
-    padding: 16px 24px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-    box-shadow: 0 4px 16px rgba(26,92,56,0.25);
-    letter-spacing: 0.02em;
-    margin-bottom: 16px;
-  }
-  .btn-enviar:hover {
-    background: var(--verde-claro);
-    box-shadow: 0 6px 20px rgba(26,92,56,0.35);
-    transform: translateY(-1px);
-  }
-  .btn-enviar:active { transform: translateY(0); }
-
-  .nota-envio {
-    font-size: 12px;
-    color: var(--texto-suave);
-    text-align: center;
-    line-height: 1.6;
-    padding: 0 8px;
-  }
-
-  /* CONFIRMACIÓN */
-  #confirmacion {
-    display: none;
-    background: var(--blanco);
-    border-radius: 12px;
-    border: 1px solid var(--borde);
-    box-shadow: var(--sombra);
-    padding: 36px 28px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  #confirmacion .icono-ok {
-    font-size: 48px;
-    margin-bottom: 16px;
-    display: block;
-  }
-  #confirmacion h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--verde);
-    margin-bottom: 10px;
-  }
-  #confirmacion p {
-    font-size: 14px;
-    color: var(--texto-suave);
-    line-height: 1.7;
-    max-width: 480px;
-    margin: 0 auto 20px;
-  }
-  .btn-nueva {
-    background: var(--verde-suave);
-    color: var(--verde);
-    border: 1.5px solid var(--verde);
-    border-radius: 8px;
-    padding: 10px 24px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-nueva:hover { background: var(--verde); color: white; }
-
-  /* FOOTER */
-  footer {
-    width: 100%;
-    background: var(--verde);
-    color: rgba(255,255,255,0.6);
-    font-size: 11.5px;
-    text-align: center;
-    padding: 16px 20px;
-    line-height: 1.6;
-    margin-top: auto;
-  }
-  footer span { color: var(--dorado-claro); }
-
-  /* ERROR inline */
-  .error-msg {
-    font-size: 12px;
-    color: var(--rojo);
-    margin-top: 3px;
-    display: none;
-  }
-  .field.invalid input,
-  .field.invalid textarea,
-  .field.invalid select {
-    border-color: var(--rojo);
-  }
-  .field.invalid .error-msg { display: block; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canal Confidencial de Denuncia — C.E. San Agustín</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <div class="header-inner">
-    <img src="data:image/png;base64,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" alt="Logo C.E. San Agustín" style="width:80px;height:80px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25));">
-    <div class="subtitulo">Centro Educacional San Agustín · Quellón, Chiloé</div>
-    <h1>Canal Confidencial<br>de Denuncia</h1>
-    <div class="badge-confidencial">Tu identidad está protegida — Ley N° 21.809</div>
-  </div>
-</header>
-
-<!-- AVISO LEGAL -->
-<div class="aviso">
-  <div class="aviso-box">
-    <strong>📋 Información importante:</strong> Este formulario está habilitado en cumplimiento de la <strong>Ley N° 21.809</strong> (Convivencia Educativa) y el RICE institucional. Toda denuncia es tratada con <strong>estricta confidencialidad</strong>. Puedes denunciar de forma anónima si lo prefieres. El Encargado de Convivencia Escolar recibirá tu denuncia y dará respuesta en un plazo máximo de <strong>5 días hábiles</strong>.
-  </div>
-</div>
-
-<!-- FORMULARIO -->
-<div class="form-wrap">
-  <div id="formulario-container">
-
-    <!-- SECCIÓN 1: ¿QUIÉN REPORTA? -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-num">1</div>
-        <div class="section-title">¿Cómo quieres enviar esta denuncia?</div>
+  <!-- NAVEGACIÓN PRINCIPAL (TABS) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand" onclick="switchTab('denuncia')">
+        <img src="data:image/png;base64,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" alt="Logo Colegio San Agustín">
+        <span>C.E. San Agustín</span>
+      </a>
+      <div class="nav-menu">
+        <button class="nav-link active" onclick="switchTab('denuncia')">📝 Denuncia</button>
+        <button class="nav-link" onclick="switchTab('seguimiento')">🔍 Seguimiento</button>
+        <button class="nav-link" onclick="switchTab('admin')">🔒 Admin</button>
       </div>
-      <div class="section-body">
-        <div class="radio-group" id="radio-anonimo">
-          <label class="radio-item" id="lbl-anonimo">
-            <input type="radio" name="anonimo" value="anonimo" checked onchange="toggleIdentidad(this)">
-            🙈 Anónimamente (sin identificarme)
-          </label>
-          <label class="radio-item" id="lbl-identificado">
-            <input type="radio" name="anonimo" value="identificado" onchange="toggleIdentidad(this)">
-            🙋 Con mis datos (me identifico)
-          </label>
-        </div>
+    </div>
+  </nav>
 
-        <div id="bloque-identidad">
-          <div style="height:14px"></div>
-          <div class="field-row">
-            <div class="field" id="f-nombre">
-              <label>Nombre completo <span class="opc">(opcional)</span></label>
-              <input type="text" id="nombre" placeholder="Tu nombre y apellido">
+  <!-- HEADER HERO -->
+  <header class="header-hero">
+    <div class="header-content">
+      <img src="data:image/png;base64,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2cmL8wFlJAJs1cn2Zza85bUv/dB7Li/37dQ4oUrPGy9dtnDO1B07dz65defb3/HXUalkg6a16zeLIadeAQzbFKmB4aRBQKRqBABmzpzbPK79+lt+fuO9Dz+7fWdL1pb6im/5kwt++q3PtTdlRYqk2lkwO7dvOu45eNJU4stPP3nhzEljJvWWq+t29O7YvWevP4M/8a2e1oEDtZpYJsgGgM+rUGA1+H4wGQvTewVvF+yD/Fw8hB4S1HqG9kAPeW3g3GvF2vIen2B4P0XqEtofuD4L40f353of26H4f73G99y/fH/8uV6fT+9Hn+xH6rV2b+K5K/2q3x6i1euvVv1Gv9952Yv19u11369F6lPv2Ffvr212/Hrt+p8d8K58YqI+fG1n8jO7D/e25T+m76X27vDq6Lz6yD/x/YpPfn1t/2zO2x697/z6P/r7df2d/a43/e/b/W/c7/s/tG/q9+t2M/3f2832zGf9zW4P+u2//83o9Xp/R9e+iNfv17R9E/Uf7n1v//fWb9ffR8/+L2/4vvpP+D/T4+H359T759v+P/u14f3p1W/s9Y39sXf35rve0Z+2PrX33/21f//N343v9v0a/tVl/3xdf/yT/0+D//uC9n/+p7u/P99L79x+r92h7Z/597z+H9334+vT+v3/fS/t56T3u2tmf29+X1kX0fR++j7bN3x2d3j9//z/h+9P5v7/bZ+9t9/h2XfXf8+d1j+/252d/u2Zvep8vr0VrvX9cZf/5rfexbXb9ef5z//zN/G59Vf3d+9kXWq7f77N3/t70+er/G6yN9x90e3y//325f+cWv92t73Kz78b1dZ/z++vT4Z6zfe2Z87Lte/+b2L66//W5/+v9/uH+/7v/m/9/i2Pvvu9H+v9e/17fHvfqz/1f/z+P16v338bn33939i3va+2v/eeEf3j7372bfXbb//t2x9+/4/W37/eq6/H343v3j/u8b3+m7U/tP9r//vfvneu8b360u+/W7/e/5/b//D/WnyPxx/++3v0nfT/zv52j/T/x/53/0f/d7+n7Y/+v6+u7Q/N981ej95+r/fB32uP9I9G+19f/b6P9ozu+z761rd27xuPet9v/2+P/ve//fXf2Lf9N//3f7R+/h+3+/w/2iPad71ef/gfbZ/96v3u9dj/+rf2/m9///doj2j//2X/f+7t//+N/3v/a4/++/f3Pz7aI9rn/yN//v/27/9v/u/9/t/v3//He3j+v7f7/0P7PfTv/7P/9+j/Uf9n/3+uv/8f2n//eOzf/t/8/fvHf4/W+/89av939uj//wP/H633/nv9f/u/G38fO/Z/Z+//D/3/H3//eOzr/8f+/wP/X//x+Nvx9/F3//9n/+9i//e/3eOP9t//H/rH/9n/+9j/7t//vTv/P9o/P/bof9H/rf23//vR/vd+j9dj//u/++/++t//99f//e/t/8fv/7G/Xfs//H+v/f+//9u1R9/b3j/+/WOPt/f/p/d/Z++j/X+0/23/e+9v/2+PP/XjtUe9t/t/f48ePX6/36//jfeP9o8e/2uPx9/H/r3/qPfe0e/13ux3/G/8aO1R/vP9Tvxo31Hj7//fR/93ujB//xH+9ePf/V9H/3R/sH+h0f7H/rH/9n/+9i//e+P/W/Z+7+XR3/+Pf7X92jVe/X3+v/2f2/v/R/a/7/fe/b9Rv7Z/8/+Z3v9fX2/N++t/d//Hvp7++D/Nl7vv9+j9fj99V7vfzfaI9r3Rvtq++P1fvv2e9f//X/6/9P//t+N/48er//vjX9vnz/xH9Gjdf8///8B/j8ajgIaTjDO4P81NIwE8/8D/POjgIYxgVMbxgCOUv8m5A3e0aOhgqM2jAkcpWFM4CgNYwJHaRgTOErDmMBRGsYEjtIwJnCUhjGBozSMCRylYUxAdX841v+M9l0pDVXdf6T/h32vNKR2WNP9F7r/tUf++965x9/79i/7/+VvD38WJk15eNphmGKY4gDGBozSMCRylYUzgaF3E/w/Roxq2bTqE+QAAAABJRU5ErkJggg==" alt="Logo C.E. San Agustín" class="logo-cole">
+      <div class="subtitulo">Centro Educacional San Agustín · Quellón, Chiloé</div>
+      <h1>Canal Confidencial de Denuncia</h1>
+      <div class="badge-confidencial">Tu identidad está protegida — Ley N° 21.809</div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+
+    <!-- 1. PESTAÑA: FORMULARIO DE DENUNCIA -->
+    <section id="sec-denuncia" class="view-section active">
+      <div class="info-banner">
+        <strong>📋 Información importante:</strong> Este formulario ha sido adaptado según la <strong>Ley de Convivencia Educativa N° 21.809</strong> y el RICE de la institución. Las denuncias son recibidas directamente por el Encargado de Convivencia Escolar para su gestión confidencial. Puedes enviar la información de manera 100% anónima.
+      </div>
+
+      <div id="form-container">
+        <!-- SECCIÓN A: ANONIMATO -->
+        <div class="card-section">
+          <div class="card-header">
+            <div class="card-num">1</div>
+            <h2 class="card-title">Tipo de Denuncia</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-group" style="margin-bottom:12px;">
+              <label>¿Cómo deseas enviar esta denuncia?</label>
             </div>
-            <div class="field" id="f-curso">
-              <label>Curso <span class="opc">(opcional)</span></label>
-              <input type="text" id="curso-denunciante" placeholder="Ej: 2° Medio A">
+            <div class="options-grid">
+              <label class="option-card selected" id="opt-anonimo">
+                <input type="radio" name="student-anonimo" value="true" checked onchange="toggleIdentidad(true)">
+                <span>🙈 Denuncia Anónima (No daré mis datos)</span>
+              </label>
+              <label class="option-card" id="opt-identificado">
+                <input type="radio" name="student-anonimo" value="false" onchange="toggleIdentidad(false)">
+                <span>🙋 Denuncia Identificada (Daré mis datos)</span>
+              </label>
+            </div>
+
+            <!-- Campos colapsables para datos del estudiante -->
+            <div id="identidad-panel" class="collapse-panel">
+              <div class="form-row">
+                <div class="form-group" id="grp-nombre">
+                  <label for="student-nombre">Nombre completo <span class="opc">(opcional)</span></label>
+                  <input type="text" id="student-nombre" placeholder="Tu nombre y apellido">
+                </div>
+                <div class="form-group" id="grp-curso">
+                  <label for="student-curso">Tu Curso <span class="opc">(opcional)</span></label>
+                  <input type="text" id="student-curso" placeholder="Ej: 8° Básico B">
+                </div>
+              </div>
+              <div class="form-row full">
+                <div class="form-group">
+                  <label for="student-correo">Correo electrónico <span class="opc">(para recibir respuestas directas)</span></label>
+                  <input type="text" id="student-correo" placeholder="tu.correo@ejemplo.com">
+                </div>
+              </div>
+            </div>
+
+            <div class="alert-info-box">
+              🔒 Si eliges la opción anónima, <strong>ningún dato personal tuyo será guardado ni será visible</strong> para el colegio. Podrás ver las respuestas del encargado usando un código que te daremos al finalizar.
             </div>
           </div>
-          <div class="field-row full">
-            <div class="field">
-              <label>Correo electrónico <span class="opc">(para recibir respuesta)</span></label>
-              <input type="text" id="correo" placeholder="tu.correo@gmail.com">
+        </div>
+
+        <!-- SECCIÓN B: PERSONAS INVOLUCRADAS -->
+        <div class="card-section">
+          <div class="card-header">
+            <div class="card-num">2</div>
+            <h2 class="card-title">Personas Involucradas</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group" id="grp-afectado-nombre">
+                <label for="afectado-nombre">Persona Afectada <span class="req">*</span></label>
+                <input type="text" id="afectado-nombre" placeholder="Nombre del estudiante que sufre la situación">
+                <span class="field-error-msg">Por favor indica el nombre de la persona afectada.</span>
+              </div>
+              <div class="form-group" id="grp-afectado-curso">
+                <label for="afectado-curso">Curso del Afectado <span class="req">*</span></label>
+                <select id="afectado-curso">
+                  <option value="">— Seleccionar Curso —</option>
+                  <optgroup label="Educación Parvularia">
+                    <option value="Pre Kinder">Pre Kinder</option>
+                    <option value="Kinder">Kinder</option>
+                  </optgroup>
+                  <optgroup label="Enseñanza Básica">
+                    <option value="1° Básico">1° Básico</option>
+                    <option value="2° Básico">2° Básico</option>
+                    <option value="3° Básico">3° Básico</option>
+                    <option value="4° Básico">4° Básico</option>
+                    <option value="5° Básico">5° Básico</option>
+                    <option value="6° Básico">6° Básico</option>
+                    <option value="7° Básico">7° Básico</option>
+                    <option value="8° Básico">8° Básico</option>
+                  </optgroup>
+                  <optgroup label="Enseñanza Media">
+                    <option value="1° Medio">1° Medio</option>
+                    <option value="2° Medio">2° Medio</option>
+                    <option value="3° Medio">3° Medio</option>
+                    <option value="4° Medio">4° Medio</option>
+                  </optgroup>
+                  <option value="No sé / Prefiero no decir">No sé / Prefiero no decir</option>
+                </select>
+                <span class="field-error-msg">Por favor selecciona un curso.</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="acusado-nombre">Persona denunciada <span class="opc">(si la sabes)</span></label>
+                <input type="text" id="acusado-nombre" placeholder="Nombre de quien genera la situación">
+              </div>
+              <div class="form-group">
+                <label for="acusado-rol">Relación del denunciado</label>
+                <select id="acusado-rol">
+                  <option value="">— Seleccionar —</option>
+                  <option value="Estudiante del mismo curso">Estudiante del mismo curso</option>
+                  <option value="Estudiante de otro curso">Estudiante de otro curso</option>
+                  <option value="Adulto / Personal del colegio">Adulto / Personal del colegio</option>
+                  <option value="Persona externa al colegio">Persona externa al colegio</option>
+                  <option value="No sé / Prefiero no decir">No sé / Prefiero no decir</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="nota-anonimo">
-          🔒 Si denuncias anónimamente, <strong>no se registrará ningún dato tuyo</strong>. De todas formas, tu denuncia será investigada con la misma seriedad.
+        <!-- SECCIÓN C: DETALLES DE LA SITUACIÓN -->
+        <div class="card-section">
+          <div class="card-header">
+            <div class="card-num">3</div>
+            <h2 class="card-title">Detalles de la Situación</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-group" style="margin-bottom:12px;">
+              <label>¿Qué tipo de situación deseas denunciar? <span class="req">*</span> <span class="opc">(Puedes marcar varias)</span></label>
+            </div>
+            <div class="options-grid" id="grp-tipos">
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Bullying / Acoso escolar repetido">
+                <span>Bullying / Acoso repetido</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Agresión física (golpes, empujones)">
+                <span>Agresión física (golpes/empujones)</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Agresión verbal o psicológica">
+                <span>Agresión verbal o psicológica</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Ciberacoso (redes sociales, WhatsApp)">
+                <span>Ciberacoso (redes sociales)</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Discriminación o exclusión social">
+                <span>Discriminación o exclusión</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Violencia o acoso de índole sexual">
+                <span>Violencia o acoso sexual</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Amenazas o intimidación">
+                <span>Amenazas o intimidación</span>
+              </label>
+              <label class="option-card">
+                <input type="checkbox" name="situacion-tipo" value="Otro tipo de situación">
+                <span>Otro tipo de situación</span>
+              </label>
+            </div>
+            <div id="err-tipos" class="field-error-msg" style="margin-top:10px;">Debes seleccionar al menos un tipo de situación.</div>
+
+            <div style="height:20px;"></div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fecha-hecho">¿Cuándo ocurrió aproximadamente?</label>
+                <input type="date" id="fecha-hecho">
+              </div>
+              <div class="form-group">
+                <label for="lugar-hecho">¿En qué lugar ocurrió?</label>
+                <select id="lugar-hecho">
+                  <option value="">— Seleccionar Lugar —</option>
+                  <option value="Sala de clases">Sala de clases</option>
+                  <option value="Patio / Área de recreación">Patio / Área de recreación</option>
+                  <option value="Baños / Camarines">Baños / Camarines</option>
+                  <option value="Pasillos o escalas">Pasillos o escalas</option>
+                  <option value="En línea / Redes sociales">En línea / Redes sociales</option>
+                  <option value="Fuera del establecimiento">Fuera del establecimiento</option>
+                  <option value="Otro lugar">Otro lugar</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row full">
+              <div class="form-group" id="grp-descripcion">
+                <label for="descripcion-hechos">Descripción de los hechos <span class="req">*</span></label>
+                <textarea id="descripcion-hechos" rows="5" placeholder="Escribe con detalle lo ocurrido. Por ejemplo: qué pasó, qué se dijeron, quiénes estaban presentes, etc."></textarea>
+                <span class="field-error-msg">Por favor describe brevemente qué ocurrió.</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="frecuencia-hecho">¿Con qué frecuencia ha ocurrido esto?</label>
+                <select id="frecuencia-hecho">
+                  <option value="">— Seleccionar Frecuencia —</option>
+                  <option value="Es la primera vez que ocurre">Es la primera vez que ocurre</option>
+                  <option value="Ha ocurrido un par de veces">Ha ocurrido un par de veces</option>
+                  <option value="Ocurre con frecuencia (semanalmente)">Ocurre con frecuencia (semanalmente)</option>
+                  <option value="Lleva ocurriendo mucho tiempo (meses)">Lleva ocurriendo mucho tiempo (meses)</option>
+                  <option value="No sé con certeza">No sé con certeza</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="riesgo-afectado">¿Consideras que el afectado está en peligro o riesgo inmediato?</label>
+                <select id="riesgo-afectado">
+                  <option value="Bajo / Sin riesgo inmediato">No lo creo / Riesgo bajo</option>
+                  <option value="Medio / Requiere atención rápida">No estoy seguro / Riesgo medio</option>
+                  <option value="Alto / Requiere atención urgente">Sí, está en riesgo inmediato / Riesgo alto</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN D: INFORMACIÓN ADICIONAL -->
+        <div class="card-section">
+          <div class="card-header">
+            <div class="card-num">4</div>
+            <h2 class="card-title">Información Adicional</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-row full">
+              <div class="form-group">
+                <label for="testigos-hechos">¿Hubo testigos? <span class="opc">(Menciona nombres o cursos si los sabes)</span></label>
+                <input type="text" id="testigos-hechos" placeholder="Ej: Dos compañeros que estaban en el pasillo">
+              </div>
+            </div>
+            <div class="form-row full">
+              <div class="form-group">
+                <label for="expectativa-resolucion">¿Qué esperas que ocurra o qué ayuda necesitas? <span class="opc">(opcional)</span></label>
+                <textarea id="expectativa-resolucion" rows="3" placeholder="Ej: Que conversen con él, que me cambien de puesto, ayuda psicológica, etc."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" onclick="submitDenuncia()">
+          🔒 Enviar Denuncia Confidencial
+        </button>
+      </div>
+
+      <!-- Pantalla de Éxito al enviar -->
+      <div id="success-container" style="display:none;">
+        <div class="card-section success-screen">
+          <span class="success-icon">🎉</span>
+          <h2>¡Denuncia Recibida con Éxito!</h2>
+          <p>
+            Tu denuncia ha sido guardada directamente de manera confidencial en el sistema de Convivencia Escolar. Se ha generado un código único para que puedas seguir el estado de tu caso de forma anónima:
+          </p>
+
+          <div class="tracking-code-box">
+            <div class="tracking-code-title">Código de Seguimiento</div>
+            <div class="tracking-code-value" id="display-tracking-code">CSA-1234</div>
+            <div class="tracking-code-desc">
+              ⚠️ Guarde este código muy bien. Es la única forma en que podrá revisar las respuestas de Convivencia Escolar sin tener que dar su nombre.
+            </div>
+          </div>
+
+          <button class="btn btn-secondary" onclick="resetForm()">
+            Crear otra denuncia
+          </button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- SECCIÓN 2: ¿QUIÉN ES AFECTADO? -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-num">2</div>
-        <div class="section-title">Persona afectada o involucrada</div>
+    <!-- 2. PESTAÑA: SEGUIMIENTO DE DENUNCIAS -->
+    <section id="sec-seguimiento" class="view-section">
+      <div class="card-section tracking-search-card">
+        <h2>Consulta el Estado de tu Caso</h2>
+        <p>Ingresa el código único que recibiste al enviar tu denuncia para ver su estado actual y las respuestas de Convivencia Escolar.</p>
+        
+        <div class="tracking-input-wrapper">
+          <input type="text" id="input-tracking-code" placeholder="Ej: CSA-ABCD" style="text-align:center; font-family:monospace; font-weight:bold; font-size:1.2rem; letter-spacing:1px;">
+          <button class="btn btn-primary" onclick="buscarSeguimiento()">🔍 Buscar</button>
+        </div>
+        <div id="tracking-error" style="color:var(--danger); font-size:0.85rem; font-weight:600; display:none; margin-top:8px;">Código no encontrado. Revisa si está bien escrito.</div>
       </div>
-      <div class="section-body">
-        <div class="field-row">
-          <div class="field" id="f-afectado-nombre">
-            <label>Nombre del/la afectado/a <span class="req">*</span></label>
-            <input type="text" id="afectado-nombre" placeholder="Nombre de quien sufre la situación">
-            <span class="error-msg">Por favor indica el nombre del/la afectado/a.</span>
+
+      <!-- Resultados del Seguimiento -->
+      <div id="tracking-results" style="display:none;" class="tracking-result-box">
+        <div class="tracking-result-header">
+          <div class="tracking-meta">
+            <h3 id="result-code">CASO CSA-XXXX</h3>
+            <span id="result-date">Fecha de envío: 02/06/2026</span>
           </div>
-          <div class="field" id="f-afectado-curso">
-            <label>Curso <span class="req">*</span></label>
-            <select id="afectado-curso">
-              <option value="">— Selecciona —</option>
-              <optgroup label="Educación Parvularia">
-                <option>Pre Kinder</option>
-                <option>Kinder</option>
-              </optgroup>
-              <optgroup label="Enseñanza Básica">
-                <option>1° Básico</option>
-                <option>2° Básico</option>
-                <option>3° Básico</option>
-                <option>4° Básico</option>
-                <option>5° Básico</option>
-                <option>6° Básico</option>
-                <option>7° Básico</option>
-                <option>8° Básico</option>
-              </optgroup>
-              <optgroup label="Enseñanza Media">
-                <option>1° Medio</option>
-                <option>2° Medio</option>
-                <option>3° Medio</option>
-                <option>4° Medio</option>
-              </optgroup>
-              <option>No sé / Prefiero no decir</option>
-            </select>
-            <span class="error-msg">Selecciona un curso.</span>
+          <div>
+            <span class="badge" id="result-status">Recibido</span>
           </div>
         </div>
-        <div class="field-row">
-          <div class="field" id="f-agresor">
-            <label>Persona que genera la situación <span class="opc">(si sabes)</span></label>
-            <input type="text" id="agresor" placeholder="Nombre o descripción">
+
+        <div class="detail-grid" style="margin-bottom:12px;">
+          <div class="detail-block">
+            <h4>Afectado/a</h4>
+            <p id="result-afectado">Juan Pérez (8° Básico B)</p>
           </div>
-          <div class="field">
-            <label>¿Quién es esa persona?</label>
-            <select id="tipo-agresor">
-              <option value="">— Selecciona —</option>
-              <option>Estudiante del mismo curso</option>
-              <option>Estudiante de otro curso</option>
-              <option>Adulto del establecimiento</option>
-              <option>Persona externa al colegio</option>
-              <option>No sé / Prefiero no decir</option>
-            </select>
+          <div class="detail-block">
+            <h4>Tipo de Situación</h4>
+            <p id="result-tipo">Bullying / Acoso escolar</p>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-block full">
+            <h4>Descripción de los hechos</h4>
+            <p id="result-desc" style="background:var(--bg); padding:10px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:0.9rem;">Detalles...</p>
+          </div>
+        </div>
+
+        <!-- Respuesta del Encargado -->
+        <div class="reply-container" id="result-reply-box">
+          <div class="reply-header">
+            <span>Respuesta de Convivencia Escolar</span>
+            <span id="result-reply-date" style="font-weight:normal; color:var(--text-muted);">02/06/2026</span>
+          </div>
+          <div class="reply-body" id="result-reply-text">
+            Su caso se encuentra en revisión. Nos pondremos en contacto prontamente mediante este portal o citando a las partes correspondientes de acuerdo al RICE.
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- SECCIÓN 3: TIPO DE SITUACIÓN -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <div class="section-title">¿Qué tipo de situación es? <span style="color:var(--rojo);font-size:12px;margin-left:4px;">*</span></div>
-      </div>
-      <div class="section-body">
-        <div class="check-grid" id="check-tipos">
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Bullying / Acoso escolar repetido"> Bullying / Acoso escolar repetido
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Agresión física (golpes, empujones)"> Agresión física (golpes, empujones)
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Agresión verbal o psicológica"> Agresión verbal o psicológica
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Ciberacoso (por redes sociales o mensajes)"> Ciberacoso (redes sociales / mensajes)
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Discriminación o exclusión"> Discriminación o exclusión
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Violencia o abuso sexual"> Violencia o abuso sexual
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Amenazas o intimidación"> Amenazas o intimidación
-          </label>
-          <label class="check-item">
-            <input type="checkbox" name="tipo" value="Otro tipo de situación"> Otro tipo de situación
-          </label>
+    <!-- 3. PESTAÑA: PANEL DE ADMINISTRACIÓN -->
+    <section id="sec-admin" class="view-section">
+      
+      <!-- Vista de Login -->
+      <div id="admin-login-view" class="card-section login-card">
+        <h2>Panel del Coordinador</h2>
+        <p>Inicia sesión para gestionar las denuncias de convivencia educativa.</p>
+        
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="admin-password">Contraseña de acceso</label>
+          <input type="password" id="admin-password" placeholder="Ingresa la contraseña" onkeypress="handleLoginKeyPress(event)">
+          <div id="login-error" style="color:var(--danger); font-size:0.85rem; font-weight:600; display:none; margin-top:6px;">Contraseña incorrecta. Inténtalo de nuevo.</div>
         </div>
-        <div id="error-tipo" style="font-size:12px;color:var(--rojo);margin-top:10px;display:none;">Selecciona al menos una situación.</div>
+        
+        <button class="btn btn-primary btn-block" onclick="intentarLogin()">
+          🔑 Entrar al Panel
+        </button>
       </div>
-    </div>
 
-    <!-- SECCIÓN 4: DESCRIPCIÓN -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-num">4</div>
-        <div class="section-title">Describe lo que ocurrió</div>
-      </div>
-      <div class="section-body">
-        <div class="field-row">
-          <div class="field" id="f-fecha">
-            <label>¿Cuándo ocurrió? <span class="opc">(aprox.)</span></label>
-            <input type="date" id="fecha-hecho">
+      <!-- Vista del Dashboard (Escondido hasta iniciar sesión) -->
+      <div id="admin-dashboard-view" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <h2 style="font-family:'DM Serif Display', serif; color:var(--primary);">Gestión de Denuncas y Casos</h2>
+          <button class="btn btn-secondary btn-header-admin" onclick="logoutAdmin()">Cerrar Sesión</button>
+        </div>
+
+        <!-- Tarjetas de resumen -->
+        <div class="dashboard-summary-cards">
+          <div class="summary-card">
+            <span class="summary-card-num" id="stat-totales">0</span>
+            <span class="summary-card-label">Casos Totales</span>
           </div>
-          <div class="field">
-            <label>¿Dónde ocurrió?</label>
-            <select id="lugar">
-              <option value="">— Selecciona —</option>
-              <option>Sala de clases</option>
-              <option>Patio / recreo</option>
-              <option>Baños</option>
-              <option>Pasillo</option>
-              <option>Fuera del colegio</option>
-              <option>En línea / redes sociales</option>
-              <option>Otro lugar</option>
-            </select>
+          <div class="summary-card" style="border-top:3px solid var(--warning);">
+            <span class="summary-card-num" id="stat-pendientes" style="color:var(--warning);">0</span>
+            <span class="summary-card-label">En Revisión</span>
+          </div>
+          <div class="summary-card" style="border-top:3px solid var(--success);">
+            <span class="summary-card-num" id="stat-resueltos" style="color:var(--success);">0</span>
+            <span class="summary-card-label">Resueltos / Cerrados</span>
           </div>
         </div>
-        <div class="field-row full">
-          <div class="field" id="f-descripcion">
-            <label>Descripción de los hechos <span class="req">*</span></label>
-            <textarea id="descripcion" rows="5" placeholder="Describe con el mayor detalle posible qué pasó. Puedes incluir quiénes estaban presentes, qué se dijo o hizo, si ha ocurrido antes, etc."></textarea>
-            <span class="error-msg">Por favor describe brevemente lo que ocurrió.</span>
+
+        <div class="admin-dashboard">
+          
+          <!-- Lista de casos (Izquierda) -->
+          <div class="admin-sidebar">
+            <h3 class="sidebar-title">Bandeja de Casos</h3>
+            <div class="admin-cases-list" id="admin-cases-container">
+              <!-- Cargado dinámicamente -->
+              <div class="admin-no-case" style="min-height:200px;">
+                <span>📂</span>
+                <p style="font-size:0.85rem;">No hay denuncias registradas.</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field-row full">
-          <div class="field">
-            <label>¿Cuánto tiempo lleva ocurriendo?</label>
-            <select id="frecuencia">
-              <option value="">— Selecciona —</option>
-              <option>Es la primera vez que ocurre</option>
-              <option>Ha ocurrido algunas veces</option>
-              <option>Ocurre frecuentemente (semanas)</option>
-              <option>Lleva meses ocurriendo</option>
-              <option>No sé con exactitud</option>
-            </select>
+
+          <!-- Detalle de caso seleccionado (Derecha) -->
+          <div class="admin-case-detail" id="admin-detail-container">
+            <div class="admin-no-case">
+              <span>👈</span>
+              <h3>Selecciona un caso</h3>
+              <p>Haz clic en uno de los casos del panel de la izquierda para ver su contenido y gestionarlo.</p>
+            </div>
           </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- SECCIÓN 5: TESTIGOS Y EVIDENCIAS -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-num">5</div>
-        <div class="section-title">Información adicional</div>
-      </div>
-      <div class="section-body">
-        <div class="field-row full">
-          <div class="field">
-            <label>¿Hay testigos? <span class="opc">(si sabes, menciona nombres o curso)</span></label>
-            <input type="text" id="testigos" placeholder="Ej: dos compañeros del 2° Medio B">
-          </div>
-        </div>
-        <div class="field-row full">
-          <div class="field">
-            <label>¿Qué necesitas o qué esperas que ocurra? <span class="opc">(opcional)</span></label>
-            <textarea id="solicitud" rows="3" placeholder="Ej: Que hablen con los involucrados, que se tome una medida, que se informe a mi apoderado, etc."></textarea>
-          </div>
-        </div>
-        <div class="field-row full">
-          <div class="field">
-            <label>¿El afectado/a está en riesgo inmediato?</label>
-            <select id="riesgo">
-              <option value="No lo creo">No lo creo</option>
-              <option value="No estoy seguro/a">No estoy seguro/a</option>
-              <option value="Sí, creo que sí">Sí, creo que está en riesgo</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
 
-    <!-- BOTÓN ENVIAR -->
-    <button class="btn-enviar" onclick="enviarDenuncia()">
-      📧 Enviar denuncia confidencial
-    </button>
-    <p class="nota-envio">
-      Al hacer clic se abrirá tu aplicación de correo con el formulario listo para enviar a<br>
-      <strong>convivenciasanagustin@fundacionserra.cl</strong><br>
-      No se guarda ningún dato en este sitio.
-    </p>
+  </main>
 
-  </div><!-- /formulario-container -->
+  <!-- FOOTER -->
+  <footer>
+    <strong style="color:white">Centro Educacional San Agustín</strong> · RBD 22330-1 · Quellón, Chiloé<br>
+    <span>Canal Oficial de Denuncias — Ley de Convivencia Educativa N° 21.809</span>
+    <span>Encargado de Convivencia Escolar: convivenciasanagustin@fundacionserra.cl</span>
+  </footer>
 
-  <!-- CONFIRMACIÓN -->
-  <div id="confirmacion">
-    <span class="icono-ok">✅</span>
-    <h2>¡Tu denuncia está lista para enviar!</h2>
-    <p>
-      Se abrió tu correo con la denuncia preparada. Solo debes hacer clic en <strong>Enviar</strong> en tu aplicación de correo.<br><br>
-      El Encargado de Convivencia Escolar la recibirá de forma confidencial y dará respuesta en un plazo de <strong>5 días hábiles</strong>.<br><br>
-      Si la situación es urgente, acude directamente a la Dirección o llama al número de emergencias del establecimiento.
-    </p>
-    <button class="btn-nueva" onclick="nuevaDenuncia()">Enviar otra denuncia</button>
-  </div>
-
-</div><!-- /form-wrap -->
-
-<footer>
-  <strong style="color:white">Centro Educacional San Agustín</strong> · RBD 22330-1 · Quellón, Chiloé<br>
-  <span>Canal habilitado en cumplimiento de Ley N° 21.809 · Circular Supereduc N° 781 y 782</span><br>
-  Encargado de Convivencia Escolar: convivenciasanagustin@fundacionserra.cl
-</footer>
-
-<script>
-  // Toggle checkboxes visual
-  document.querySelectorAll('.check-item').forEach(item => {
-    item.addEventListener('change', () => {
-      item.classList.toggle('checked', item.querySelector('input').checked);
-    });
-  });
-
-  // Toggle radio visual
-  document.querySelectorAll('.radio-item').forEach(item => {
-    item.querySelector('input').addEventListener('change', () => {
-      document.querySelectorAll('.radio-item').forEach(r => r.classList.remove('selected'));
-      item.classList.add('selected');
-    });
-  });
-  document.getElementById('lbl-anonimo').classList.add('selected');
-
-  function toggleIdentidad(radio) {
-    const bloque = document.getElementById('bloque-identidad');
-    if (radio.value === 'identificado') {
-      bloque.classList.add('visible');
-    } else {
-      bloque.classList.remove('visible');
-    }
-  }
-
-  function validar() {
-    let ok = true;
-
-    // Afectado nombre
-    const fn = document.getElementById('f-afectado-nombre');
-    const vn = document.getElementById('afectado-nombre').value.trim();
-    fn.classList.toggle('invalid', !vn);
-    if (!vn) ok = false;
-
-    // Afectado curso
-    const fc = document.getElementById('f-afectado-curso');
-    const vc = document.getElementById('afectado-curso').value;
-    fc.classList.toggle('invalid', !vc);
-    if (!vc) ok = false;
-
-    // Tipo (al menos uno)
-    const tipos = Array.from(document.querySelectorAll('input[name="tipo"]:checked'));
-    const errTipo = document.getElementById('error-tipo');
-    if (tipos.length === 0) {
-      errTipo.style.display = 'block';
-      ok = false;
-    } else {
-      errTipo.style.display = 'none';
-    }
-
-    // Descripción
-    const fd = document.getElementById('f-descripcion');
-    const vd = document.getElementById('descripcion').value.trim();
-    fd.classList.toggle('invalid', !vd);
-    if (!vd) ok = false;
-
-    return ok;
-  }
-
-  function enviarDenuncia() {
-    if (!validar()) {
-      document.querySelector('.field.invalid, #error-tipo')?.scrollIntoView({behavior:'smooth', block:'center'});
-      return;
-    }
-
-    const anonimo = document.querySelector('input[name="anonimo"]:checked').value === 'anonimo';
-    const nombre = document.getElementById('nombre').value.trim();
-    const cursoDen = document.getElementById('curso-denunciante').value.trim();
-    const correo = document.getElementById('correo').value.trim();
-
-    const afectadoNombre = document.getElementById('afectado-nombre').value.trim();
-    const afectadoCurso  = document.getElementById('afectado-curso').value;
-    const agresor        = document.getElementById('agresor').value.trim() || 'No especificado';
-    const tipoAgresor    = document.getElementById('tipo-agresor').value || 'No especificado';
-
-    const tipos = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(c => c.value);
-    const fechaHecho  = document.getElementById('fecha-hecho').value;
-    const lugar       = document.getElementById('lugar').value || 'No especificado';
-    const descripcion = document.getElementById('descripcion').value.trim();
-    const frecuencia  = document.getElementById('frecuencia').value || 'No especificado';
-    const testigos    = document.getElementById('testigos').value.trim() || 'No indicado';
-    const solicitud   = document.getElementById('solicitud').value.trim() || 'No especificado';
-    const riesgo      = document.getElementById('riesgo').value;
-
-    const hoy = new Date().toLocaleDateString('es-CL', {day:'2-digit', month:'2-digit', year:'numeric'});
-
-    let denunciante = anonimo
-      ? 'ANÓNIMO (sin identificación)'
-      : `${nombre || 'No indicado'}${cursoDen ? ' — Curso: ' + cursoDen : ''}${correo ? ' — Correo respuesta: ' + correo : ''}`;
-
-    const cuerpo = `
-FORMULARIO CONFIDENCIAL DE DENUNCIA
-Centro Educacional San Agustín — Canal Ley N° 21.809
-Fecha de envío: ${hoy}
-═══════════════════════════════════════════════════
-
-■ DENUNCIANTE
-${denunciante}
-
-■ PERSONA AFECTADA
-Nombre: ${afectadoNombre}
-Curso: ${afectadoCurso}
-
-■ PERSONA GENERADORA DE LA SITUACIÓN
-Nombre o descripción: ${agresor}
-Rol en el establecimiento: ${tipoAgresor}
-
-■ TIPO DE SITUACIÓN DENUNCIADA
-${tipos.map(t => '• ' + t).join('\n')}
-
-■ DESCRIPCIÓN DE LOS HECHOS
-Fecha aproximada: ${fechaHecho || 'No especificada'}
-Lugar: ${lugar}
-Frecuencia: ${frecuencia}
-
-${descripcion}
-
-■ TESTIGOS
-${testigos}
-
-■ SOLICITUD DEL/LA DENUNCIANTE
-${solicitud}
-
-■ NIVEL DE RIESGO PERCIBIDO
-${riesgo}
-
-═══════════════════════════════════════════════════
-Este formulario fue generado mediante el Canal Confidencial de Denuncia
-del Centro Educacional San Agustín (RBD 22330-1), habilitado en 
-cumplimiento de la Ley N° 21.809 y el RICE institucional.
-    `.trim();
-
-    const asunto = encodeURIComponent('Denuncia Confidencial — C.E. San Agustín — ' + hoy);
-    const body = encodeURIComponent(cuerpo);
-    const mailto = `mailto:convivenciasanagustin@fundacionserra.cl?subject=${asunto}&body=${body}`;
-
-    // Método robusto: enlace temporal con click programático
-    const enlace = document.createElement('a');
-    enlace.href = mailto;
-    enlace.style.display = 'none';
-    document.body.appendChild(enlace);
-    enlace.click();
-    setTimeout(() => document.body.removeChild(enlace), 500);
-
-    setTimeout(() => {
-      document.getElementById('formulario-container').style.display = 'none';
-      document.getElementById('confirmacion').style.display = 'block';
-      document.getElementById('confirmacion').scrollIntoView({behavior:'smooth'});
-    }, 800);
-  }
-
-  function nuevaDenuncia() {
-    document.getElementById('confirmacion').style.display = 'none';
-    document.getElementById('formulario-container').style.display = 'block';
-    document.querySelectorAll('input[type=text], textarea').forEach(el => el.value = '');
-    document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-    document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
-    document.querySelectorAll('.check-item').forEach(el => el.classList.remove('checked'));
-    document.querySelector('input[name="anonimo"][value="anonimo"]').checked = true;
-    document.getElementById('bloque-identidad').classList.remove('visible');
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
